@@ -7,6 +7,9 @@ import me.valizadeh.challenges.airwallex.operator.OperatorFactory;
 import me.valizadeh.challenges.airwallex.utils.Utility;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
@@ -44,19 +47,27 @@ public class RpnCalculator implements Calculator {
             }
         } catch (UnknownOperator | InsufficientParametersException e) {
             message.append(e.getMessage());
+            message.append(System.getProperty(NEW_LINE));
         }
-        message.append(System.getProperty(NEW_LINE));
 
-        message.append("stack: ");
+        message.append("stack:");
         numbers.get().forEach(n -> {
-            message.append(n).append(" ");
+            String pattern = "#.##########";
+            DecimalFormat decimalFormat = new DecimalFormat(pattern);
+            decimalFormat.setRoundingMode(RoundingMode.FLOOR);
+            message.append(" ").append(decimalFormat.format(n));
         });
-        message.append(System.getProperty(NEW_LINE));
 
-        message.append("history: ");
-        history.get().forEach(n -> {
-            message.append(n).append(" ");
-        });
+        StringBuilder historyStr = new StringBuilder();
+        historyStr.append("history:");
+        history.get().forEach(n -> historyStr.append(" ").append(n));
+        System.out.println(historyStr.toString());
         return message.toString();
+    }
+
+    @Override
+    public void reset() {
+        history.get().clear();
+        numbers.get().clear();
     }
 }

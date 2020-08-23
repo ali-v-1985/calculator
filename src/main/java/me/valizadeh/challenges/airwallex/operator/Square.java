@@ -3,7 +3,7 @@ package me.valizadeh.challenges.airwallex.operator;
 public class Square extends Root {
 
     public Square() {
-        rootValue = 2;
+        super(2);
     }
 
     @Override

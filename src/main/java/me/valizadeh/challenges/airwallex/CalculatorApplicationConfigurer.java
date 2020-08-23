@@ -3,6 +3,8 @@ package me.valizadeh.challenges.airwallex;
 import me.valizadeh.challenges.airwallex.calculator.Calculator;
 import me.valizadeh.challenges.airwallex.calculator.RpnCalculator;
 import me.valizadeh.challenges.airwallex.operator.*;
+import me.valizadeh.challenges.airwallex.gateway.ConsoleGateway;
+import me.valizadeh.challenges.airwallex.gateway.Gateway;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -81,4 +83,18 @@ public class CalculatorApplicationConfigurer {
     public Operator undo() {
         return new Undo();
     }
+
+    @Bean
+    @Order
+    public Gateway console() {
+        return new ConsoleGateway();
+    }
+
+    @Bean
+    public Gateway gateway(ApplicationContext context,
+                          @Value("${calculator.gateway}") String gateway) {
+        return (Gateway) context.getBean(gateway);
+    }
+
+
 }

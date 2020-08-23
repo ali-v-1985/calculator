@@ -1,0 +1,4 @@
+2 sqrt
+stack: 1.4142135623
+clear 9 sqrt
+stack: 3

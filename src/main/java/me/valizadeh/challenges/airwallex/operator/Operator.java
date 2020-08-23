@@ -10,7 +10,7 @@ import java.util.Stack;
 public interface Operator {
 
 
-    String INSUFFICIENT_PARAMETERS_WARN = "operator {0} (position: {1}): insufficient parameters";
+    String INSUFFICIENT_PARAMETERS_WARN = "Operator {0} (position: {1}): insufficient parameters";
 
     Stack<BigDecimal> calculate(Stack<BigDecimal> numbers, int pos) throws InsufficientParametersException;
 

@@ -2,7 +2,7 @@ package me.valizadeh.challenges.airwallex.operator;
 
 import me.valizadeh.challenges.airwallex.exception.UnknownOperator;
 
-public final class OperatorFactory {
+public class OperatorFactory {
 
     public static final String ADDITION = "+";
     public static final String SUBTRACTION = "-";
@@ -20,7 +20,7 @@ public final class OperatorFactory {
     private Operator clear;
     private Operator undo;
 
-    public final Operator get(String operator) throws UnknownOperator {
+    public Operator get(String operator) throws UnknownOperator {
         switch (operator) {
             case ADDITION:
                 return addition;

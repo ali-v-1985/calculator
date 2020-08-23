@@ -7,13 +7,20 @@ import java.util.Stack;
 
 public abstract class Root extends UnaryOperator {
 
-    protected int rootValue;
+    private final double rootPowBase;
+
+    public Root(int rootBase) {
+        this.rootPowBase = (1.0 / rootBase);
+    }
 
     @Override
     public Stack<BigDecimal> calculate(Stack<BigDecimal> numbers, int pos) throws InsufficientParametersException {
         validate(numbers, pos);
         BigDecimal number1 = numbers.pop();
-        numbers.push(number1);//TODO:root it
+
+        double rootValue = Math.pow(number1.doubleValue(), this.rootPowBase);
+
+        numbers.push(BigDecimal.valueOf(rootValue));
         return numbers;
     }
 
