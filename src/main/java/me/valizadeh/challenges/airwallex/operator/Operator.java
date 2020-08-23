@@ -1,20 +1,19 @@
 package me.valizadeh.challenges.airwallex.operator;
 
 import me.valizadeh.challenges.airwallex.exception.InsufficientParametersException;
-import me.valizadeh.challenges.airwallex.exception.UnknownOperator;
 
 import java.math.BigDecimal;
 import java.text.MessageFormat;
-import java.util.Stack;
+import java.util.Deque;
+
+import static me.valizadeh.challenges.airwallex.utils.MessageUtil.INSUFFICIENT_PARAMETERS_WARN;
 
 public interface Operator {
 
 
-    String INSUFFICIENT_PARAMETERS_WARN = "Operator {0} (position: {1}): insufficient parameters";
+    void calculate(Deque<BigDecimal> numbers, int pos) throws InsufficientParametersException;
 
-    Stack<BigDecimal> calculate(Stack<BigDecimal> numbers, int pos) throws InsufficientParametersException;
-
-    default void validate(Stack<BigDecimal> numbers, int pos)  throws InsufficientParametersException {
+    default void validate(Deque<BigDecimal> numbers, int pos) throws InsufficientParametersException {
         if (numbers.size() < neededOperands()) {
             throw new InsufficientParametersException(MessageFormat.format(INSUFFICIENT_PARAMETERS_WARN,
                     getName(),

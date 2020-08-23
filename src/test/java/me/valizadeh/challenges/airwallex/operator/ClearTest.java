@@ -6,7 +6,8 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import static org.springframework.test.util.AssertionErrors.assertNotNull;
 import static org.springframework.test.util.AssertionErrors.assertTrue;
@@ -20,13 +21,13 @@ public class ClearTest {
     @Test
     public void testClear() {
 
-        Stack<BigDecimal> numbers = new Stack<>();
+        Deque<BigDecimal> numbers = new ArrayDeque<>();
         numbers.push(BigDecimal.valueOf(10));
         numbers.push(BigDecimal.valueOf(5));
 
-        Stack<BigDecimal> calculate = clear.calculate(numbers, 5);
+        clear.calculate(numbers, 5);
 
-        assertNotNull("Result should not be null!", calculate);
-        assertTrue("Result should be empty!", calculate.empty());
+        assertNotNull("Result should not be null!", numbers);
+        assertTrue("Result should be empty!", numbers.isEmpty());
     }
 }

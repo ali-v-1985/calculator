@@ -2,9 +2,10 @@ package me.valizadeh.challenges.airwallex;
 
 import me.valizadeh.challenges.airwallex.calculator.Calculator;
 import me.valizadeh.challenges.airwallex.calculator.RpnCalculator;
-import me.valizadeh.challenges.airwallex.operator.*;
 import me.valizadeh.challenges.airwallex.gateway.ConsoleGateway;
 import me.valizadeh.challenges.airwallex.gateway.Gateway;
+import me.valizadeh.challenges.airwallex.memory.MemoryManager;
+import me.valizadeh.challenges.airwallex.operator.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -19,8 +20,9 @@ public class CalculatorApplicationConfigurer {
 
     @Bean
     @Order
-    public Calculator rpn(OperatorFactory operatorFactory) {
-        return new RpnCalculator(operatorFactory);
+    public Calculator rpn(OperatorFactory operatorFactory,
+                          MemoryManager memoryManager) {
+        return new RpnCalculator(operatorFactory, memoryManager);
     }
 
     @Bean
@@ -92,9 +94,12 @@ public class CalculatorApplicationConfigurer {
 
     @Bean
     public Gateway gateway(ApplicationContext context,
-                          @Value("${calculator.gateway}") String gateway) {
+                           @Value("${calculator.gateway}") String gateway) {
         return (Gateway) context.getBean(gateway);
     }
 
-
+    @Bean
+    public MemoryManager memoryManager() {
+        return new MemoryManager();
+    }
 }

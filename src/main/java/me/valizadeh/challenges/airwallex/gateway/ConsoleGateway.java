@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class ConsoleGateway implements Gateway {
 
-    private Scanner scanner;
+    private final Scanner scanner;
 
     public ConsoleGateway() {
         scanner = new Scanner(System.in);

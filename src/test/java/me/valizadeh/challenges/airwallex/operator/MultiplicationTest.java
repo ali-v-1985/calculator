@@ -8,7 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import static org.springframework.test.util.AssertionErrors.*;
 
@@ -21,21 +22,21 @@ public class MultiplicationTest {
     @Test
     public void testMultiplyTwoNumber() throws InsufficientParametersException {
 
-        Stack<BigDecimal> numbers = new Stack<>();
+        Deque<BigDecimal> numbers = new ArrayDeque<>();
         numbers.push(BigDecimal.valueOf(10));
         numbers.push(BigDecimal.valueOf(5));
 
-        Stack<BigDecimal> calculate = multiplication.calculate(numbers, 5);
+        multiplication.calculate(numbers, 5);
 
-        assertNotNull("Result should not be null!", calculate);
-        assertFalse("Result should not be empty!", calculate.empty());
-        assertTrue("Result should not as expected!", calculate.pop().equals(BigDecimal.valueOf(50)));
+        assertNotNull("Result should not be null!", numbers);
+        assertFalse("Result should not be empty!", numbers.isEmpty());
+        assertEquals("Result is not as expected!", BigDecimal.valueOf(50), numbers.peek());
     }
 
     @Test
     public void testInsufficientParameters() {
 
-        Stack<BigDecimal> numbers = new Stack<>();
+        Deque<BigDecimal> numbers = new ArrayDeque<>();
         numbers.push(BigDecimal.valueOf(10));
 
         InsufficientParametersException assertThrows = Assertions.assertThrows(InsufficientParametersException.class,

@@ -8,7 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import static org.springframework.test.util.AssertionErrors.*;
 
@@ -21,21 +22,38 @@ public class DivisionTest {
     @Test
     public void testDivideTwoNumber() throws InsufficientParametersException {
 
-        Stack<BigDecimal> numbers = new Stack<>();
+        Deque<BigDecimal> numbers = new ArrayDeque<>();
         numbers.push(BigDecimal.valueOf(10));
         numbers.push(BigDecimal.valueOf(5));
 
-        Stack<BigDecimal> calculate = division.calculate(numbers, 5);
+        division.calculate(numbers, 5);
 
-        assertNotNull("Result should not be null!", calculate);
-        assertFalse("Result should not be empty!", calculate.empty());
-        assertTrue("Result should not as expected!", calculate.pop().equals(BigDecimal.valueOf(2)));
+        assertNotNull("Result should not be null!", numbers);
+        assertFalse("Result should not be empty!", numbers.isEmpty());
+        assertNotNull("Result expected to have one element!", numbers.peek());
+        if (numbers.peek() != null) {
+            assertEquals("Result is not as expected!", 2, numbers.peek().intValue());
+        }
+    }
+
+    @Test
+    public void testDivideTwoNumberWithPrecision() throws InsufficientParametersException {
+
+        Deque<BigDecimal> numbers = new ArrayDeque<>();
+        numbers.push(BigDecimal.valueOf(10));
+        numbers.push(BigDecimal.valueOf(3));
+
+        division.calculate(numbers, 5);
+
+        assertNotNull("Result should not be null!", numbers);
+        assertFalse("Result should not be empty!", numbers.isEmpty());
+        assertEquals("Result is not as expected!", BigDecimal.valueOf(3.333333333333333), numbers.peek());
     }
 
     @Test
     public void testInsufficientParameters() {
 
-        Stack<BigDecimal> numbers = new Stack<>();
+        Deque<BigDecimal> numbers = new ArrayDeque<>();
         numbers.push(BigDecimal.valueOf(10));
 
         InsufficientParametersException assertThrows = Assertions.assertThrows(InsufficientParametersException.class,

@@ -8,6 +8,6 @@ public class SquareRoot extends Root {
 
     @Override
     public String getName() {
-        return OperatorFactory.SQRT;
+        return OperatorFactory.SQRT_SIGN;
     }
 }

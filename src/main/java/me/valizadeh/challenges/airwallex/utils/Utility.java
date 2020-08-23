@@ -4,6 +4,9 @@ import java.util.regex.Pattern;
 
 public class Utility {
 
+    private Utility() {
+    }
+
     private static final Pattern numericPattern;
 
     static {

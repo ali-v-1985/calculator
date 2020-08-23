@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Scope;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -39,7 +38,6 @@ public class CalculatorTest {
     }
 
     @ParameterizedTest
-//    @ValueSource(strings = {"TestCase2"/*, "TestCase4"*/})
     @ValueSource(strings = {"TestCase1", "TestCase2",
             "TestCase3", "TestCase4",
             "TestCase5", "TestCase6",

@@ -4,13 +4,13 @@ import me.valizadeh.challenges.airwallex.exception.UnknownOperator;
 
 public class OperatorFactory {
 
-    public static final String ADDITION = "+";
-    public static final String SUBTRACTION = "-";
-    public static final String MULTIPLICATION = "*";
-    public static final String DIVISION = "/";
-    public static final String SQRT = "sqrt";
-    public static final String CLEAR = "clear";
-    public static final String UNDO = "undo";
+    public static final String ADDITION_SIGN = "+";
+    public static final String SUBTRACTION_SIGN = "-";
+    public static final String MULTIPLICATION_SIGN = "*";
+    public static final String DIVISION_SIGN = "/";
+    public static final String SQRT_SIGN = "sqrt";
+    public static final String CLEAR_SIGN = "clear";
+    public static final String UNDO_SIGN = "undo";
 
     private Operator addition;
     private Operator subtraction;
@@ -22,19 +22,19 @@ public class OperatorFactory {
 
     public Operator get(String operator) throws UnknownOperator {
         switch (operator) {
-            case ADDITION:
+            case ADDITION_SIGN:
                 return addition;
-            case SUBTRACTION:
+            case SUBTRACTION_SIGN:
                 return subtraction;
-            case MULTIPLICATION:
+            case MULTIPLICATION_SIGN:
                 return multiplication;
-            case DIVISION:
+            case DIVISION_SIGN:
                 return division;
-            case SQRT:
+            case SQRT_SIGN:
                 return sqrt;
-            case CLEAR:
+            case CLEAR_SIGN:
                 return clear;
-            case UNDO:
+            case UNDO_SIGN:
                 return undo;
             default:
                 throw new UnknownOperator(operator);

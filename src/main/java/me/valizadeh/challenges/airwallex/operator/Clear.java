@@ -1,14 +1,13 @@
 package me.valizadeh.challenges.airwallex.operator;
 
 import java.math.BigDecimal;
-import java.util.Stack;
+import java.util.Deque;
 
 public class Clear implements Operator {
 
     @Override
-    public Stack<BigDecimal> calculate(Stack<BigDecimal> numbers, int pos) {
+    public void calculate(Deque<BigDecimal> numbers, int pos) {
         numbers.clear();
-        return numbers;
     }
 
     @Override
@@ -18,6 +17,6 @@ public class Clear implements Operator {
 
     @Override
     public String getName() {
-        return OperatorFactory.CLEAR;
+        return OperatorFactory.CLEAR_SIGN;
     }
 }
