@@ -39,6 +39,40 @@ public class RpnCalculatorTest {
     }
 
     @Test
+    public void testTestCase2() throws UnknownOperator, InsufficientParametersException {
+
+        String input1 = "2 sqrt";
+
+        Operator mockedSquareRoot = mock(SquareRoot.class);
+        when(operatorFactory.get("sqrt")).thenReturn(mockedSquareRoot);
+        Stack<BigDecimal> value1 = new Stack<>();
+        value1.push(BigDecimal.valueOf(1.4142135623));
+        when(mockedSquareRoot.calculate(any(), anyInt())).thenReturn(value1);
+        String calculate = calculator.calculate(input1);
+
+        assertEquals("Result1 should be as expected!", "stack: 1.4142135623", calculate);
+
+        String input2 = "clear 9 sqrt";
+        Operator mockedClear = mock(Clear.class);
+        when(operatorFactory.get("clear")).thenReturn(mockedClear);
+        Stack<BigDecimal> value2 = new Stack<>();
+        when(mockedClear.calculate(any(), anyInt())).thenReturn(value2);
+
+        Stack<BigDecimal> value21 = new Stack<>();
+        value21.push(BigDecimal.valueOf(3));
+        when(mockedSquareRoot.calculate(any(), anyInt())).thenReturn(value21);
+
+
+        String calculate2 = calculator.calculate(input2);
+
+        assertEquals("Result2 should be as expected!", "stack: 3", calculate2);
+
+
+        verify(mockedClear).calculate(any(), anyInt());
+        verify(mockedSquareRoot, times(2)).calculate(any(), anyInt());
+    }
+
+    @Test
     public void testTestCase3() throws UnknownOperator, InsufficientParametersException {
 
         String input1 = "5 2 -";

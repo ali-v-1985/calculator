@@ -71,7 +71,7 @@ public class CalculatorApplicationConfigurer {
 
     @Bean
     public Operator sqrt() {
-        return new Square();
+        return new SquareRoot();
     }
 
     @Bean

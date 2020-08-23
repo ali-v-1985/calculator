@@ -1,8 +1,8 @@
 package me.valizadeh.challenges.airwallex.operator;
 
-public class Square extends Root {
+public class SquareRoot extends Root {
 
-    public Square() {
+    public SquareRoot() {
         super(2);
     }
 
