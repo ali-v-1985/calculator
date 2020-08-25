@@ -1,5 +1,7 @@
 package me.valizadeh.challenges.airwallex.operator;
 
+import me.valizadeh.challenges.airwallex.utils.Constants;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -7,6 +9,7 @@ import java.math.RoundingMode;
  * The {@link Division} {@link Statement} which is a {@link BinaryStatement}
  */
 public class Division extends BinaryStatement {
+
 
     /**
      *
@@ -24,6 +27,6 @@ public class Division extends BinaryStatement {
      */
     @Override
     public BigDecimal execute() {
-        return operand1.execute().divide(operand2.execute(), 15, RoundingMode.FLOOR);
+        return operand1.execute().divide(operand2.execute(), Constants.SCALE, RoundingMode.FLOOR);
     }
 }

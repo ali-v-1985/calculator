@@ -8,7 +8,7 @@ import java.text.MessageFormat;
 import java.util.Deque;
 import java.util.NoSuchElementException;
 
-import static me.valizadeh.challenges.airwallex.utils.MessageUtil.INSUFFICIENT_PARAMETERS_WARN;
+import static me.valizadeh.challenges.airwallex.utils.Constants.INSUFFICIENT_PARAMETERS_WARN;
 
 /**
  * Get an instance of an {@link Statement} from {@link BeanFactory}.

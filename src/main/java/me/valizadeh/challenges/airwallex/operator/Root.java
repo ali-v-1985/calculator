@@ -1,6 +1,9 @@
 package me.valizadeh.challenges.airwallex.operator;
 
+import me.valizadeh.challenges.airwallex.utils.Constants;
+
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * A abstract class which provides the root {@link Statement} based on the {@link this#rootPowBase}.
@@ -8,6 +11,7 @@ import java.math.BigDecimal;
 public abstract class Root extends UnaryStatement {
 
     private final double rootPowBase;
+
 
     /**
      * @param operand the operand which this root {@link Statement} should be applied on.
@@ -26,6 +30,6 @@ public abstract class Root extends UnaryStatement {
     @Override
     public BigDecimal execute() {
         double rootValue = Math.pow(operand.execute().doubleValue(), this.rootPowBase);
-        return BigDecimal.valueOf(rootValue);
+        return BigDecimal.valueOf(rootValue).setScale(Constants.SCALE, RoundingMode.FLOOR);
     }
 }
