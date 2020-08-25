@@ -10,6 +10,12 @@ import java.util.NoSuchElementException;
 
 import static me.valizadeh.challenges.airwallex.utils.MessageUtil.INSUFFICIENT_PARAMETERS_WARN;
 
+/**
+ * Get an instance of an {@link Statement} from {@link BeanFactory}.
+ * The {@link Statement} will try find its operands on the stack of the {@link Statement}s.
+ * The {@link InsufficientParametersException} will be thrown
+ * if enough operands have not been found on the stack of {@link Statement}s.
+ */
 public class OperatorFactory {
 
     private final BeanFactory beanFactory;
@@ -20,9 +26,16 @@ public class OperatorFactory {
         this.operatorSignMapper = operatorSignMapper;
     }
 
-    public Operator get(String sign, int pos, Deque<Operator> operators) {
+    /**
+     * Gets an instance of {@link Statement} based on the {@link Statement}'s sign.
+     * @param sign the sign which {@link Statement} implementation has been mapped to.
+     * @param pos the position of the sign in the input
+     * @param statements stack of the statements which has been pushed already to extract the operands of it.
+     * @return an instance of {@link Statement}
+     */
+    public Statement get(String sign, int pos, Deque<Statement> statements) {
         try {
-            return beanFactory.getBean(operatorSignMapper.get(sign), operators);
+            return beanFactory.getBean(operatorSignMapper.map(sign), statements);
         } catch (BeansException e) {
             handleException(sign, pos, e);
         }

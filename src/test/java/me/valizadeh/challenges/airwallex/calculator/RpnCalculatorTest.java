@@ -163,10 +163,10 @@ public class RpnCalculatorTest {
         Addition mockedAddition = mock(Addition.class);
         when(operatorFactory.get(eq("+"), anyInt(), any())).thenReturn(mockedAddition);
         Multiplication mockedMultiplication = mock(Multiplication.class);
-        when(operatorFactory.get(eq("*"), anyInt(), any())).thenAnswer(new Answer<Operator>() {
+        when(operatorFactory.get(eq("*"), anyInt(), any())).thenAnswer(new Answer<Statement>() {
             private int calls = 0;
             @Override
-            public Operator answer(InvocationOnMock invocation) throws Throwable {
+            public Statement answer(InvocationOnMock invocation) throws Throwable {
                 calls++;
                 if (calls < 3) {
                     return mockedMultiplication;

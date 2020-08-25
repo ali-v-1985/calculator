@@ -3,20 +3,24 @@ package me.valizadeh.challenges.airwallex.calculator;
 import me.valizadeh.challenges.airwallex.exception.InsufficientParametersException;
 import me.valizadeh.challenges.airwallex.exception.UnknownOperator;
 import me.valizadeh.challenges.airwallex.memory.Memory;
-import me.valizadeh.challenges.airwallex.operator.Operator;
+import me.valizadeh.challenges.airwallex.operator.Statement;
 import me.valizadeh.challenges.airwallex.operator.OperatorFactory;
 import me.valizadeh.challenges.airwallex.operator.Value;
-import me.valizadeh.challenges.airwallex.utils.Utility;
+import me.valizadeh.challenges.airwallex.utils.NumberHelper;
 
 import java.math.BigDecimal;
 import java.util.StringTokenizer;
 import java.util.function.ObjIntConsumer;
 
+/**
+ * The {@literal Reverse Polish Notation} implementation of the {@link Calculator} API.
+ */
 public class RpnCalculator implements Calculator {
 
     public static final String NEW_LINE = "line.separator";
     public static final String UNDO_COMMAND = "undo";
     public static final String CLEAR_COMMAND = "clear";
+
     private final Memory memory;
     private final OperatorFactory operatorFactory;
 
@@ -26,6 +30,11 @@ public class RpnCalculator implements Calculator {
         this.operatorFactory = operatorFactory;
     }
 
+    /**
+     * Process input string based on {@literal RPN}
+     * @param input the input string of the {@link Calculator}
+     * @return The execution of all {@link Statement}s in memory
+     */
     public String execute(String input) {
         StringBuilder message = new StringBuilder();
         try {
@@ -36,6 +45,13 @@ public class RpnCalculator implements Calculator {
         }
         message.append(memory.result());
         return message.toString();
+    }
+
+    /**
+     * Ask the memory to clear the {@link Statement}s inside it.
+     */
+    public void clear() {
+        memory.clear();
     }
 
     private void readInput(String input, ObjIntConsumer<String> pushFunction) {
@@ -49,14 +65,14 @@ public class RpnCalculator implements Calculator {
     }
 
     private void push(String input, int pos) {
-        Operator operator;
+        Statement statement;
         if (!checkInternalOperation(input)) {
-            if (Utility.isNumeric(input)) {
-                operator = new Value(new BigDecimal(input));
+            if (NumberHelper.isNumeric(input)) {
+                statement = new Value(new BigDecimal(input));
             } else {
-                operator = operatorFactory.get(input, pos, memory.getOperations());
+                statement = operatorFactory.get(input, pos, memory.getOperations());
             }
-            memory.save(operator);
+            memory.save(statement);
         }
     }
 
@@ -74,10 +90,6 @@ public class RpnCalculator implements Calculator {
 
     private void undo() {
         memory.undo();
-    }
-
-    public void clear() {
-        memory.clear();
     }
 
 }

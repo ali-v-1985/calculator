@@ -1,5 +1,8 @@
 package me.valizadeh.challenges.airwallex.utils;
 
+/**
+ * A repository of the messages that calculator might show to user.
+ */
 public final class MessageUtil {
 
     private MessageUtil() {

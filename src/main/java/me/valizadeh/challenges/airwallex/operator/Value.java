@@ -4,7 +4,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Value implements Operator {
+/**
+ * A value {@link Statement} which contains a {@link BigDecimal} value.
+ */
+public class Value implements Statement {
 
     private final BigDecimal numberValue;
 
@@ -18,7 +21,7 @@ public class Value implements Operator {
     }
 
     @Override
-    public List<Operator> unExecute() {
+    public List<Statement> unExecute() {
         return new ArrayList<>();
     }
 }

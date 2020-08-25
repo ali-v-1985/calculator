@@ -49,36 +49,36 @@ public class CalculatorApplicationConfigurer {
 
     @Bean
     @Scope("prototype")
-    public Addition addition(Deque<Operator> operators) {
-        return (Addition) getBinaryOperator(operators, Addition::new);
+    public Addition addition(Deque<Statement> statements) {
+        return (Addition) getBinaryOperator(statements, Addition::new);
 
     }
 
     @Bean
     @Scope("prototype")
-    public Subtraction subtraction(Deque<Operator> operators) {
-        return (Subtraction) getBinaryOperator(operators, Subtraction::new);
+    public Subtraction subtraction(Deque<Statement> statements) {
+        return (Subtraction) getBinaryOperator(statements, Subtraction::new);
 
     }
 
     @Bean
     @Scope("prototype")
-    public Multiplication multiplication(Deque<Operator> operators) {
-        return (Multiplication) getBinaryOperator(operators, Multiplication::new);
+    public Multiplication multiplication(Deque<Statement> statements) {
+        return (Multiplication) getBinaryOperator(statements, Multiplication::new);
 
     }
 
     @Bean
     @Scope("prototype")
-    public Division division(Deque<Operator> operators) {
-        return (Division) getBinaryOperator(operators, Division::new);
+    public Division division(Deque<Statement> statements) {
+        return (Division) getBinaryOperator(statements, Division::new);
 
     }
 
     @Bean
     @Scope("prototype")
-    public SquareRoot sqrt(Deque<Operator> operators) {
-        return (SquareRoot) getUnaryOperator(operators, SquareRoot::new);
+    public SquareRoot sqrt(Deque<Statement> statements) {
+        return (SquareRoot) getUnaryOperator(statements, SquareRoot::new);
     }
 
     @Bean
@@ -100,25 +100,25 @@ public class CalculatorApplicationConfigurer {
 
 
 
-    private Operator getBinaryOperator(Deque<Operator> operators,
-                                       BiFunction<Operator, Operator, BinaryOperator> instance) {
-        Operator operand2 = null;
-        Operator operand1;
+    private Statement getBinaryOperator(Deque<Statement> statements,
+                                        BiFunction<Statement, Statement, BinaryStatement> instance) {
+        Statement operand2 = null;
+        Statement operand1;
         try {
-            operand2 = operators.pop();
-            operand1 = operators.pop();
+            operand2 = statements.pop();
+            operand1 = statements.pop();
         } catch (NoSuchElementException e) {
             if (operand2 != null) {
-                operators.push(operand2);
+                statements.push(operand2);
             }
             throw e;
         }
         return instance.apply(operand1, operand2);
     }
 
-    private Operator getUnaryOperator(Deque<Operator> operators,
-                                      Function<Operator, UnaryOperator> instance) {
-        Operator operand = operators.pop();
+    private Statement getUnaryOperator(Deque<Statement> statements,
+                                       Function<Statement, UnaryStatement> instance) {
+        Statement operand = statements.pop();
         return instance.apply(operand);
     }
 }

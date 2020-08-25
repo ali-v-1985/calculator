@@ -1,6 +1,6 @@
 package me.valizadeh.challenges.airwallex.memory;
 
-import me.valizadeh.challenges.airwallex.operator.Operator;
+import me.valizadeh.challenges.airwallex.operator.Statement;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -9,12 +9,15 @@ import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+/**
+ * The memory which saves the {@link Statement}s.
+ */
 public class Memory {
 
     private static final String PATTERN = "#.##########";
 
-    private final ThreadLocal<Deque<Operator>> operations;
-    private final ThreadLocal<Deque<Operator>> undone;
+    private final ThreadLocal<Deque<Statement>> operations;
+    private final ThreadLocal<Deque<Statement>> undone;
     private final DecimalFormat decimalFormat;
 
 
@@ -29,7 +32,11 @@ public class Memory {
         this.decimalFormat.setRoundingMode(RoundingMode.FLOOR);
     }
 
-    public Deque<Operator> getOperations() {
+    /**
+     *
+     * @return a list of {@link Statement}s which have been saved on memory.
+     */
+    public Deque<Statement> getOperations() {
         if(operations.get() == null) {
             this.operations.remove();
             operations.set(new ConcurrentLinkedDeque<>());
@@ -37,14 +44,10 @@ public class Memory {
         return operations.get();
     }
 
-    public Deque<Operator> getUndone() {
-        if(undone.get() == null) {
-            this.undone.remove();
-            undone.set(new ConcurrentLinkedDeque<>());
-        }
-        return undone.get();
-    }
-
+    /**
+     *
+     * @return a string which represent the execution of the {@link Statement}s which have been saved on memory.
+     */
     public String result() {
         StringBuilder memory = new StringBuilder();
         memory.append("stack:");
@@ -56,6 +59,9 @@ public class Memory {
         return memory.toString();
     }
 
+    /**
+     * Clears the {@link Statement}s history on the memory.
+     */
     public void clear() {
         this.operations.get().clear();
         this.operations.remove();
@@ -65,16 +71,31 @@ public class Memory {
         this.undone.set(new ConcurrentLinkedDeque<>());
     }
 
+    /**
+     * Undoes the latest pushed {@link Statement} on the memory.
+     */
     public void undo() {
         if (!this.getOperations().isEmpty()) {
-            Operator undoOperator = this.getOperations().pop();
-            List<Operator> undoOperators = undoOperator.unExecute();
-            undoOperators.forEach(o -> this.getOperations().push(o));
-            this.getUndone().push(undoOperator);
+            Statement undoStatement = this.getOperations().pop();
+            List<Statement> undoStatements = undoStatement.unExecute();
+            undoStatements.forEach(o -> this.getOperations().push(o));
+            this.getUndone().push(undoStatement);
         }
     }
 
-    public void save(Operator operator) {
-        this.getOperations().push(operator);
+    /**
+     * Saves the {@link Statement} on the memory.
+     * @param statement
+     */
+    public void save(Statement statement) {
+        this.getOperations().push(statement);
+    }
+
+    private Deque<Statement> getUndone() {
+        if(undone.get() == null) {
+            this.undone.remove();
+            undone.set(new ConcurrentLinkedDeque<>());
+        }
+        return undone.get();
     }
 }

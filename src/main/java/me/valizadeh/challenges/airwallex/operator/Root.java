@@ -2,20 +2,30 @@ package me.valizadeh.challenges.airwallex.operator;
 
 import java.math.BigDecimal;
 
-public abstract class Root extends UnaryOperator {
+/**
+ * A abstract class which provides the root {@link Statement} based on the {@link this#rootPowBase}.
+ */
+public abstract class Root extends UnaryStatement {
 
     private final double rootPowBase;
 
-    public Root(Operator operand, int rootBase) {
+    /**
+     * @param operand the operand which this root {@link Statement} should be applied on.
+     * @param rootBase the rootBase which this root {@link Statement} should work based on.
+     */
+    public Root(Statement operand, int rootBase) {
         super(operand);
         this.rootPowBase = (1.0 / rootBase);
     }
 
+    /**
+     * Executes the root on the operand.
+     *
+     * @return a big decimal result of root operation.
+     */
     @Override
     public BigDecimal execute() {
-
         double rootValue = Math.pow(operand.execute().doubleValue(), this.rootPowBase);
-
         return BigDecimal.valueOf(rootValue);
     }
 }
