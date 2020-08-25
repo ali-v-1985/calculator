@@ -1,4 +1,6 @@
-package me.valizadeh.challenges.airwallex.operation;
+package me.valizadeh.challenges.airwallex.memory;
+
+import me.valizadeh.challenges.airwallex.operator.Operator;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -10,8 +12,8 @@ public class Memory {
 
     private static final String PATTERN = "#.##########";
 
-    private final ThreadLocal<Deque<Operation>> operations;
-    private final ThreadLocal<Deque<Operation>> undone;
+    private final ThreadLocal<Deque<Operator>> operations;
+    private final ThreadLocal<Deque<Operator>> undone;
     private final DecimalFormat decimalFormat;
 
 
@@ -26,7 +28,7 @@ public class Memory {
         this.decimalFormat.setRoundingMode(RoundingMode.FLOOR);
     }
 
-    public Deque<Operation> getOperations() {
+    public Deque<Operator> getOperations() {
         if(operations.get() == null) {
             this.operations.remove();
             operations.set(new ConcurrentLinkedDeque<>());
@@ -34,7 +36,7 @@ public class Memory {
         return operations.get();
     }
 
-    public Deque<Operation> getUndone() {
+    public Deque<Operator> getUndone() {
         if(undone.get() == null) {
             this.undone.remove();
             undone.set(new ConcurrentLinkedDeque<>());
@@ -51,5 +53,14 @@ public class Memory {
         });
 
         return memory.toString();
+    }
+
+    public void clear() {
+        this.operations.get().clear();
+        this.operations.remove();
+        this.operations.set(new ConcurrentLinkedDeque<>());
+        this.undone.get().clear();
+        this.undone.remove();
+        this.undone.set(new ConcurrentLinkedDeque<>());
     }
 }

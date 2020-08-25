@@ -39,7 +39,7 @@ public class Application {
         return args -> {
             String input;
             while ((input = gateway.read()) != null && !input.isEmpty()) {
-                gateway.write(calculator.calculate(input));
+                gateway.write(calculator.execute(input));
             }
         };
     }

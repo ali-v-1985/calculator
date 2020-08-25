@@ -27,6 +27,8 @@ public class FileGateway implements Gateway {
     }
 
     public void unloadTestCase() {
-        scanner.close();
+        if (scanner != null) {
+            scanner.close();
+        }
     }
 }

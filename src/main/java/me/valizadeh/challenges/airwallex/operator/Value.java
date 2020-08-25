@@ -1,10 +1,10 @@
-package me.valizadeh.challenges.airwallex.operation;
+package me.valizadeh.challenges.airwallex.operator;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Value implements Operation {
+public class Value implements Operator {
 
     private final BigDecimal numberValue;
 
@@ -18,7 +18,7 @@ public class Value implements Operation {
     }
 
     @Override
-    public List<Operation> unExecute() {
+    public List<Operator> unExecute() {
         return new ArrayList<>();
     }
 }

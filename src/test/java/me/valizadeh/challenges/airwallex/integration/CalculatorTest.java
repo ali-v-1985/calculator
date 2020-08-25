@@ -3,8 +3,6 @@ package me.valizadeh.challenges.airwallex.integration;
 import me.valizadeh.challenges.airwallex.CalculatorTestConfigurer;
 import me.valizadeh.challenges.airwallex.calculator.Calculator;
 import me.valizadeh.challenges.airwallex.gateway.FileGateway;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -16,7 +14,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.springframework.test.util.AssertionErrors.assertEquals;
-import static org.springframework.test.util.AssertionErrors.assertNotNull;
 
 @ExtendWith(SpringExtension.class)
 @Import(CalculatorTestConfigurer.class)
@@ -31,12 +28,6 @@ public class CalculatorTest {
     @Qualifier("file")
     private FileGateway gateway;
 
-    @Test
-    public void testCalculatorAutowired() {
-        assertNotNull("Calculator should not be null!", calculator);
-        assertNotNull("FileReader should not be null!", gateway);
-    }
-
     @ParameterizedTest
     @ValueSource(strings = {"TestCase1", "TestCase2",
             "TestCase3", "TestCase4",
@@ -47,7 +38,7 @@ public class CalculatorTest {
 
         String input;
         while ((input = gateway.read()) != null && !input.isEmpty()) {
-            String calculate = calculator.calculate(input);
+            String calculate = calculator.execute(input);
             StringBuilder outputs = new StringBuilder();
             String output;
             while ((output = gateway.read()) != null && !output.isEmpty() && !output.contains("stack:")) {
@@ -56,16 +47,7 @@ public class CalculatorTest {
             outputs.append(output);
             assertEquals("Out put should be equal to expected!", outputs.toString(), calculate);
         }
-
-
-
-    }
-
-    @AfterEach
-    public void cleanup() {
-        calculator.reset();
+        calculator.clear();
         gateway.unloadTestCase();
     }
-
-
 }

@@ -2,7 +2,7 @@ package me.valizadeh.challenges.airwallex.calculator;
 
 public interface Calculator {
 
-    String calculate(String input);
+    String execute(String input);
 
-    void reset();
+    void clear();
 }

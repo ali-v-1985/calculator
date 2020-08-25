@@ -1,71 +1,35 @@
 package me.valizadeh.challenges.airwallex.operator;
 
 import me.valizadeh.challenges.airwallex.exception.UnknownOperator;
+import org.springframework.beans.factory.BeanFactory;
+
+import java.util.Deque;
+
+import static me.valizadeh.challenges.airwallex.operator.OperatorSigns.*;
 
 public class OperatorFactory {
 
-    public static final String ADDITION_SIGN = "+";
-    public static final String SUBTRACTION_SIGN = "-";
-    public static final String MULTIPLICATION_SIGN = "*";
-    public static final String DIVISION_SIGN = "/";
-    public static final String SQRT_SIGN = "sqrt";
-    public static final String CLEAR_SIGN = "clear";
-    public static final String UNDO_SIGN = "undo";
+    private final BeanFactory beanFactory;
 
-    private Operator addition;
-    private Operator subtraction;
-    private Operator multiplication;
-    private Operator division;
-    private Operator sqrt;
-    private Operator clear;
-    private Operator undo;
+    public OperatorFactory(BeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
+    }
 
-    public Operator get(String operator) throws UnknownOperator {
-        switch (operator) {
+    public Operator get(String sign, Deque<Operator> operators) throws UnknownOperator {
+        switch (sign) {
             case ADDITION_SIGN:
-                return addition;
+                return beanFactory.getBean(Addition.class, operators);
             case SUBTRACTION_SIGN:
-                return subtraction;
+                return beanFactory.getBean(Subtraction.class, operators);
             case MULTIPLICATION_SIGN:
-                return multiplication;
+                return beanFactory.getBean(Multiplication.class, operators);
             case DIVISION_SIGN:
-                return division;
+                return beanFactory.getBean(Division.class, operators);
             case SQRT_SIGN:
-                return sqrt;
-            case CLEAR_SIGN:
-                return clear;
-            case UNDO_SIGN:
-                return undo;
+                return beanFactory.getBean(SquareRoot.class, operators);
             default:
-                throw new UnknownOperator(operator);
+                throw new UnknownOperator(sign);
         }
-    }
 
-    public void setAddition(Operator addition) {
-        this.addition = addition;
-    }
-
-    public void setSubtraction(Operator subtraction) {
-        this.subtraction = subtraction;
-    }
-
-    public void setMultiplication(Operator multiplication) {
-        this.multiplication = multiplication;
-    }
-
-    public void setDivision(Operator division) {
-        this.division = division;
-    }
-
-    public void setSqrt(Operator sqrt) {
-        this.sqrt = sqrt;
-    }
-
-    public void setClear(Operator clear) {
-        this.clear = clear;
-    }
-
-    public void setUndo(Operator undo) {
-        this.undo = undo;
     }
 }

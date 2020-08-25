@@ -1,8 +1,8 @@
-package me.valizadeh.challenges.airwallex.operation;
+package me.valizadeh.challenges.airwallex.operator;
 
-public class OperationSigns {
+public class OperatorSigns {
 
-    private OperationSigns() {
+    private OperatorSigns() {
     }
 
     public static final String ADDITION_SIGN = "+";
