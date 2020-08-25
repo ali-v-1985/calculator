@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Deque;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class Memory {
@@ -44,7 +45,7 @@ public class Memory {
         return undone.get();
     }
 
-    public String getMemory() {
+    public String result() {
         StringBuilder memory = new StringBuilder();
         memory.append("stack:");
         operations.get().descendingIterator().forEachRemaining(n -> {
@@ -62,5 +63,18 @@ public class Memory {
         this.undone.get().clear();
         this.undone.remove();
         this.undone.set(new ConcurrentLinkedDeque<>());
+    }
+
+    public void undo() {
+        if (!this.getOperations().isEmpty()) {
+            Operator undoOperator = this.getOperations().pop();
+            List<Operator> undoOperators = undoOperator.unExecute();
+            undoOperators.forEach(o -> this.getOperations().push(o));
+            this.getUndone().push(undoOperator);
+        }
+    }
+
+    public void save(Operator operator) {
+        this.getOperations().push(operator);
     }
 }

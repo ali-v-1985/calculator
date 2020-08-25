@@ -1,9 +1,13 @@
 package me.valizadeh.challenges.airwallex.gateway;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Scanner;
 
 public class ConsoleGateway implements Gateway {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConsoleGateway.class);
     private final Scanner scanner;
 
     public ConsoleGateway() {
@@ -17,6 +21,6 @@ public class ConsoleGateway implements Gateway {
 
     @Override
     public void write(String output) {
-        System.out.println(output);
+        LOGGER.info(output);
     }
 }

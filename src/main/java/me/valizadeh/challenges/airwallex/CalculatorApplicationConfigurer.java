@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.Order;
 
 import java.util.Deque;
+import java.util.NoSuchElementException;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -37,8 +38,13 @@ public class CalculatorApplicationConfigurer {
     }
 
     @Bean
-    public OperatorFactory operatorFactory(BeanFactory beanFactory) {
-        return new OperatorFactory(beanFactory);
+    public OperatorFactory operatorFactory(BeanFactory beanFactory, OperatorSignMapper operatorSignMapper) {
+        return new OperatorFactory(beanFactory, operatorSignMapper);
+    }
+
+    @Bean
+    public OperatorSignMapper operatorSignMapper() {
+        return new OperatorSignMapper();
     }
 
     @Bean
@@ -94,13 +100,14 @@ public class CalculatorApplicationConfigurer {
 
 
 
-    private Operator getBinaryOperator(Deque<Operator> operators, BiFunction<Operator, Operator, BinaryOperator> instance) {
+    private Operator getBinaryOperator(Deque<Operator> operators,
+                                       BiFunction<Operator, Operator, BinaryOperator> instance) {
         Operator operand2 = null;
         Operator operand1;
         try {
             operand2 = operators.pop();
             operand1 = operators.pop();
-        } catch (Exception e) {
+        } catch (NoSuchElementException e) {
             if (operand2 != null) {
                 operators.push(operand2);
             }
@@ -109,7 +116,8 @@ public class CalculatorApplicationConfigurer {
         return instance.apply(operand1, operand2);
     }
 
-    private Operator getUnaryOperator(Deque<Operator> operators, Function<Operator, UnaryOperator> instance) {
+    private Operator getUnaryOperator(Deque<Operator> operators,
+                                      Function<Operator, UnaryOperator> instance) {
         Operator operand = operators.pop();
         return instance.apply(operand);
     }

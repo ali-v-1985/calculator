@@ -9,11 +9,8 @@ import me.valizadeh.challenges.airwallex.operator.Value;
 import me.valizadeh.challenges.airwallex.utils.Utility;
 
 import java.math.BigDecimal;
-import java.text.MessageFormat;
-import java.util.List;
 import java.util.StringTokenizer;
-
-import static me.valizadeh.challenges.airwallex.utils.MessageUtil.INSUFFICIENT_PARAMETERS_WARN;
+import java.util.function.ObjIntConsumer;
 
 public class RpnCalculator implements Calculator {
 
@@ -29,59 +26,58 @@ public class RpnCalculator implements Calculator {
         this.operatorFactory = operatorFactory;
     }
 
-    public void clear() {
-        memory.clear();
-    }
-
-
     public String execute(String input) {
         StringBuilder message = new StringBuilder();
-        StringTokenizer tokenizer = new StringTokenizer(input);
-        int pos = 1;
         try {
-            while (tokenizer.hasMoreTokens()) {
-                String token = tokenizer.nextToken();
-                this.push(token, pos);
-                pos += token.length() + 1;
-            }
+            readInput(input, this::push);
         } catch (UnknownOperator | InsufficientParametersException e) {
             message.append(e.getMessage());
             message.append(System.getProperty(NEW_LINE));
         }
-        message.append(memory.getMemory());
+        message.append(memory.result());
         return message.toString();
     }
 
-    private void push(String operationValue, int pos) throws InsufficientParametersException, UnknownOperator {
-        Operator operator;
-        if (operationValue.equals(UNDO_COMMAND)) {
-            this.undo();
-        } else if (operationValue.equals(CLEAR_COMMAND)) {
-            this.clear();
-        } else {
-            if (Utility.isNumeric(operationValue)) {
-                operator = new Value(new BigDecimal(operationValue));
-            } else {
-                try {
-                    operator = operatorFactory.get(operationValue, memory.getOperations());
-                } catch(UnknownOperator e) {
-                    throw e;
-                } catch (Exception e) {
-                    throw new InsufficientParametersException(MessageFormat.format(INSUFFICIENT_PARAMETERS_WARN,
-                            operationValue,
-                            pos));
-                }
-            }
-            memory.getOperations().push(operator);
+    private void readInput(String input, ObjIntConsumer<String> pushFunction) {
+        int pos = 1;
+        StringTokenizer tokenizer = new StringTokenizer(input);
+        while (tokenizer.hasMoreTokens()) {
+            String token = tokenizer.nextToken();
+            pushFunction.accept(token, pos);
+            pos += token.length() + 1;
         }
     }
 
-    private void undo() {
-        if (!memory.getOperations().isEmpty()) {
-            Operator undoOperator = memory.getOperations().pop();
-            List<Operator> undoOperators = undoOperator.unExecute();
-            undoOperators.forEach(o -> memory.getOperations().push(o));
-            memory.getUndone().push(undoOperator);
+    private void push(String input, int pos) {
+        Operator operator;
+        if (!checkInternalOperation(input)) {
+            if (Utility.isNumeric(input)) {
+                operator = new Value(new BigDecimal(input));
+            } else {
+                operator = operatorFactory.get(input, pos, memory.getOperations());
+            }
+            memory.save(operator);
         }
     }
+
+    private boolean checkInternalOperation(String input) {
+        if (!(input.equals(UNDO_COMMAND) || input.equals(CLEAR_COMMAND))) {
+            return false;
+        }
+        if (input.equals(UNDO_COMMAND)) {
+            this.undo();
+        } else {
+            this.clear();
+        }
+        return true;
+    }
+
+    private void undo() {
+        memory.undo();
+    }
+
+    public void clear() {
+        memory.clear();
+    }
+
 }
