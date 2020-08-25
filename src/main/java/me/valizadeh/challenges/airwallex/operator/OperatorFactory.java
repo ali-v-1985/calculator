@@ -1,12 +1,13 @@
 package me.valizadeh.challenges.airwallex.operator;
 
 import me.valizadeh.challenges.airwallex.exception.InsufficientParametersException;
+import me.valizadeh.challenges.airwallex.operand.OperandWrapper;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 
 import java.text.MessageFormat;
-import java.util.Deque;
 import java.util.NoSuchElementException;
+import java.util.function.Function;
 
 import static me.valizadeh.challenges.airwallex.utils.Constants.INSUFFICIENT_PARAMETERS_WARN;
 
@@ -30,12 +31,14 @@ public class OperatorFactory {
      * Gets an instance of {@link Statement} based on the {@link Statement}'s sign.
      * @param sign the sign which {@link Statement} implementation has been mapped to.
      * @param pos the position of the sign in the input
-     * @param statements stack of the statements which has been pushed already to extract the operands of it.
+     * @param operandWrapperFunc A function which receive a {@link Statement} class
+     *                           and return a subclass of {@link OperandWrapper}
      * @return an instance of {@link Statement}
      */
-    public Statement get(String sign, int pos, Deque<Statement> statements) {
+    public Statement get(String sign, int pos,
+                         Function<Class<? extends Statement>, OperandWrapper> operandWrapperFunc) {
         try {
-            return beanFactory.getBean(operatorSignMapper.map(sign), statements);
+            return beanFactory.getBean(operatorSignMapper.map(sign), operandWrapperFunc);
         } catch (BeansException e) {
             handleException(sign, pos, e);
         }

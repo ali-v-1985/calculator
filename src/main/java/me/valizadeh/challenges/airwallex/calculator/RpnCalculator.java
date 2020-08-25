@@ -3,14 +3,16 @@ package me.valizadeh.challenges.airwallex.calculator;
 import me.valizadeh.challenges.airwallex.exception.InsufficientParametersException;
 import me.valizadeh.challenges.airwallex.exception.UnknownOperator;
 import me.valizadeh.challenges.airwallex.memory.Memory;
-import me.valizadeh.challenges.airwallex.operator.Statement;
-import me.valizadeh.challenges.airwallex.operator.OperatorFactory;
-import me.valizadeh.challenges.airwallex.operator.Value;
+import me.valizadeh.challenges.airwallex.operand.BinaryOperandWrapper;
+import me.valizadeh.challenges.airwallex.operand.OperandWrapper;
+import me.valizadeh.challenges.airwallex.operand.UnaryOperandWrapper;
+import me.valizadeh.challenges.airwallex.operator.*;
 import me.valizadeh.challenges.airwallex.utils.NumberHelper;
 
 import java.math.BigDecimal;
+import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
-import java.util.function.ObjIntConsumer;
+import java.util.function.*;
 
 /**
  * The {@literal Reverse Polish Notation} implementation of the {@link Calculator} API.
@@ -32,6 +34,7 @@ public class RpnCalculator implements Calculator {
 
     /**
      * Process input string based on {@literal RPN}
+     *
      * @param input the input string of the {@link Calculator}
      * @return The execution of all {@link Statement}s in memory
      */
@@ -70,10 +73,41 @@ public class RpnCalculator implements Calculator {
             if (NumberHelper.isNumeric(input)) {
                 statement = new Value(new BigDecimal(input));
             } else {
-                statement = operatorFactory.get(input, pos, memory.getOperations());
+                statement = operatorFactory.get(input, pos, this::operandWrapper);
             }
             memory.save(statement);
         }
+    }
+
+    private OperandWrapper operandWrapper(Class<? extends Statement> statementType) {
+        if (UnaryStatement.class.isAssignableFrom(statementType)) {
+            return getUnaryOperandWrapper();
+        } else if (BinaryStatement.class.isAssignableFrom(statementType)) {
+            return getBinaryOperandWrapper();
+        } else {
+            return null;
+        }
+    }
+
+    private UnaryOperandWrapper getUnaryOperandWrapper() {
+        Statement operand = memory.getOperations().pop();
+        return new UnaryOperandWrapper(operand);
+    }
+
+    private BinaryOperandWrapper getBinaryOperandWrapper() {
+        Statement operand2 = null;
+        Statement operand1;
+        try {
+            operand2 = memory.getOperations().pop();
+            operand1 = memory.getOperations().pop();
+        } catch (NoSuchElementException e) {
+            if (operand2 != null) {
+                memory.getOperations().push(operand2);
+            }
+            throw e;
+        }
+        Statement finalOperand = operand2;
+        return new BinaryOperandWrapper(operand1, finalOperand);
     }
 
     private boolean checkInternalOperation(String input) {

@@ -5,6 +5,9 @@ import me.valizadeh.challenges.airwallex.calculator.RpnCalculator;
 import me.valizadeh.challenges.airwallex.gateway.ConsoleGateway;
 import me.valizadeh.challenges.airwallex.gateway.Gateway;
 import me.valizadeh.challenges.airwallex.memory.Memory;
+import me.valizadeh.challenges.airwallex.operand.BinaryOperandWrapper;
+import me.valizadeh.challenges.airwallex.operand.OperandWrapper;
+import me.valizadeh.challenges.airwallex.operand.UnaryOperandWrapper;
 import me.valizadeh.challenges.airwallex.operator.*;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,8 +18,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.Order;
 
-import java.util.Deque;
-import java.util.NoSuchElementException;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -49,36 +50,41 @@ public class CalculatorApplicationConfigurer {
 
     @Bean
     @Scope("prototype")
-    public Addition addition(Deque<Statement> statements) {
-        return (Addition) getBinaryOperator(statements, Addition::new);
+    public Addition addition(Function<Class<? extends Statement>, OperandWrapper> operandWrapperFunc) {
+        BinaryOperandWrapper operandWrapper = (BinaryOperandWrapper) operandWrapperFunc.apply(Addition.class);
+        return (Addition) getBinaryOperator(operandWrapper, Addition::new);
 
     }
 
     @Bean
     @Scope("prototype")
-    public Subtraction subtraction(Deque<Statement> statements) {
-        return (Subtraction) getBinaryOperator(statements, Subtraction::new);
+    public Subtraction subtraction(Function<Class<? extends Statement>, OperandWrapper> operandWrapperFunc) {
+        BinaryOperandWrapper operandWrapper = (BinaryOperandWrapper) operandWrapperFunc.apply(Subtraction.class);
+        return (Subtraction) getBinaryOperator(operandWrapper, Subtraction::new);
 
     }
 
     @Bean
     @Scope("prototype")
-    public Multiplication multiplication(Deque<Statement> statements) {
-        return (Multiplication) getBinaryOperator(statements, Multiplication::new);
+    public Multiplication multiplication(Function<Class<? extends Statement>, OperandWrapper> operandWrapperFunc) {
+        BinaryOperandWrapper operandWrapper = (BinaryOperandWrapper) operandWrapperFunc.apply(Multiplication.class);
+        return (Multiplication) getBinaryOperator(operandWrapper, Multiplication::new);
 
     }
 
     @Bean
     @Scope("prototype")
-    public Division division(Deque<Statement> statements) {
-        return (Division) getBinaryOperator(statements, Division::new);
+    public Division division(Function<Class<? extends Statement>, OperandWrapper> operandWrapperFunc) {
+        BinaryOperandWrapper operandWrapper = (BinaryOperandWrapper) operandWrapperFunc.apply(Division.class);
+        return (Division) getBinaryOperator(operandWrapper, Division::new);
 
     }
 
     @Bean
     @Scope("prototype")
-    public SquareRoot sqrt(Deque<Statement> statements) {
-        return (SquareRoot) getUnaryOperator(statements, SquareRoot::new);
+    public SquareRoot sqrt(Function<Class<? extends Statement>, OperandWrapper> operandWrapperFunc) {
+        UnaryOperandWrapper operandWrapper = (UnaryOperandWrapper) operandWrapperFunc.apply(SquareRoot.class);
+        return (SquareRoot) getUnaryOperator(operandWrapper, SquareRoot::new);
     }
 
     @Bean
@@ -99,26 +105,14 @@ public class CalculatorApplicationConfigurer {
     }
 
 
-
-    private Statement getBinaryOperator(Deque<Statement> statements,
+    private Statement getBinaryOperator(BinaryOperandWrapper operandWrapper,
                                         BiFunction<Statement, Statement, BinaryStatement> instance) {
-        Statement operand2 = null;
-        Statement operand1;
-        try {
-            operand2 = statements.pop();
-            operand1 = statements.pop();
-        } catch (NoSuchElementException e) {
-            if (operand2 != null) {
-                statements.push(operand2);
-            }
-            throw e;
-        }
-        return instance.apply(operand1, operand2);
+        return instance.apply(operandWrapper.getOperand1(), operandWrapper.getOperand2());
     }
 
-    private Statement getUnaryOperator(Deque<Statement> statements,
+    private Statement getUnaryOperator(UnaryOperandWrapper unaryOperandWrapper,
                                        Function<Statement, UnaryStatement> instance) {
-        Statement operand = statements.pop();
+        Statement operand = unaryOperandWrapper.getOperand();
         return instance.apply(operand);
     }
 }
