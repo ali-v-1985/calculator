@@ -11,7 +11,7 @@ public class SubtractionTest {
     @Test
     public void testAddTwoNumber() {
 
-        Subtraction subtraction = new Subtraction(new Value(BigDecimal.valueOf(10)), new Value(BigDecimal.valueOf(5)));
+        Subtraction subtraction = new Subtraction(new ValueStatement(BigDecimal.valueOf(10)), new ValueStatement(BigDecimal.valueOf(5)));
 
         BigDecimal returnValue = subtraction.execute();
 

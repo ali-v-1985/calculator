@@ -11,7 +11,7 @@ public class DivisionTest {
     @Test
     public void testAddTwoNumber() {
 
-        Division division = new Division(new Value(BigDecimal.valueOf(10)), new Value(BigDecimal.valueOf(5)));
+        Division division = new Division(new ValueStatement(BigDecimal.valueOf(10)), new ValueStatement(BigDecimal.valueOf(5)));
 
         BigDecimal returnValue = division.execute();
 
@@ -21,7 +21,7 @@ public class DivisionTest {
     @Test
     public void testDivideTwoNumberWithPrecision() {
 
-        Division division = new Division(new Value(BigDecimal.valueOf(10)), new Value(BigDecimal.valueOf(3)));
+        Division division = new Division(new ValueStatement(BigDecimal.valueOf(10)), new ValueStatement(BigDecimal.valueOf(3)));
 
         BigDecimal returnValue = division.execute();
         assertEquals("Result is not as expected!", BigDecimal.valueOf(3.333333333333333), returnValue);

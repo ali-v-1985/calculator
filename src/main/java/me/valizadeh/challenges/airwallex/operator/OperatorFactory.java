@@ -2,9 +2,11 @@ package me.valizadeh.challenges.airwallex.operator;
 
 import me.valizadeh.challenges.airwallex.exception.InsufficientParametersException;
 import me.valizadeh.challenges.airwallex.operand.OperandWrapper;
+import me.valizadeh.challenges.airwallex.utils.NumberHelper;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 
+import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
@@ -28,19 +30,25 @@ public class OperatorFactory {
     }
 
     /**
-     * Gets an instance of {@link Statement} based on the {@link Statement}'s sign.
-     * @param sign the sign which {@link Statement} implementation has been mapped to.
-     * @param pos the position of the sign in the input
+     * Gets an instance of {@link Statement} based on the {@link Statement}'s input.
+     *
+     * @param input              the input which {@link Statement} implementation should be mapped to.
+     * @param pos                the position of the input
+     *                           in the {@link me.valizadeh.challenges.airwallex.calculator.Calculator}'s input
      * @param operandWrapperFunc A function which receive a {@link Statement} class
      *                           and return a subclass of {@link OperandWrapper}
+     *                           to extract the operand(s) of each {@link Statement}
      * @return an instance of {@link Statement}
      */
-    public Statement get(String sign, int pos,
+    public Statement get(String input, int pos,
                          Function<Class<? extends Statement>, OperandWrapper> operandWrapperFunc) {
         try {
-            return beanFactory.getBean(operatorSignMapper.map(sign), operandWrapperFunc);
+            if (NumberHelper.isNumeric(input)) {
+                return beanFactory.getBean(ValueStatement.class, new BigDecimal(input));
+            }
+            return beanFactory.getBean(operatorSignMapper.map(input), operandWrapperFunc);
         } catch (BeansException e) {
-            handleException(sign, pos, e);
+            handleException(input, pos, e);
         }
         return null;
     }

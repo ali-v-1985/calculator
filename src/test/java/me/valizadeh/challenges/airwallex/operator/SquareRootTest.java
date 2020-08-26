@@ -11,7 +11,7 @@ public class SquareRootTest {
     @Test
     public void testSquareRoot() {
 
-        Root root = new SquareRoot(new Value(BigDecimal.valueOf(9)));
+        Root root = new SquareRoot(new ValueStatement(BigDecimal.valueOf(9)));
 
         BigDecimal returnValue = root.execute();
 
@@ -21,7 +21,7 @@ public class SquareRootTest {
     @Test
     public void testSquareRootWithPrecision() {
 
-        Root root = new SquareRoot(new Value(BigDecimal.valueOf(2)));
+        Root root = new SquareRoot(new ValueStatement(BigDecimal.valueOf(2)));
 
         BigDecimal returnValue = root.execute();
 

@@ -11,7 +11,7 @@ public class MultiplicationTest {
     @Test
     public void testAddTwoNumber() {
 
-        Multiplication multiplication = new Multiplication(new Value(BigDecimal.valueOf(10)), new Value(BigDecimal.valueOf(5)));
+        Multiplication multiplication = new Multiplication(new ValueStatement(BigDecimal.valueOf(10)), new ValueStatement(BigDecimal.valueOf(5)));
 
         BigDecimal returnValue = multiplication.execute();
 

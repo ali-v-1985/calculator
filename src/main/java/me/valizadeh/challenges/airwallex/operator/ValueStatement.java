@@ -7,11 +7,11 @@ import java.util.List;
 /**
  * A value {@link Statement} which contains a {@link BigDecimal} value.
  */
-public class Value implements Statement {
+public class ValueStatement implements Statement {
 
     private final BigDecimal numberValue;
 
-    public Value(BigDecimal numberValue) {
+    public ValueStatement(BigDecimal numberValue) {
         this.numberValue = numberValue;
     }
 

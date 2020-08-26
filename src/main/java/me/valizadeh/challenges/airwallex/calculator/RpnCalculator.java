@@ -6,10 +6,11 @@ import me.valizadeh.challenges.airwallex.memory.Memory;
 import me.valizadeh.challenges.airwallex.operand.BinaryOperandWrapper;
 import me.valizadeh.challenges.airwallex.operand.OperandWrapper;
 import me.valizadeh.challenges.airwallex.operand.UnaryOperandWrapper;
-import me.valizadeh.challenges.airwallex.operator.*;
-import me.valizadeh.challenges.airwallex.utils.NumberHelper;
+import me.valizadeh.challenges.airwallex.operator.BinaryStatement;
+import me.valizadeh.challenges.airwallex.operator.OperatorFactory;
+import me.valizadeh.challenges.airwallex.operator.Statement;
+import me.valizadeh.challenges.airwallex.operator.UnaryStatement;
 
-import java.math.BigDecimal;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.function.ObjIntConsumer;
@@ -57,6 +58,13 @@ public class RpnCalculator implements Calculator {
         memory.clear();
     }
 
+    /**
+     * Ask the memory to undo the latest {@link Statement} inside it.
+     */
+    public void undo() {
+        memory.undo();
+    }
+
     private void readInput(String input, ObjIntConsumer<String> pushFunction) {
         int pos = 1;
         StringTokenizer tokenizer = new StringTokenizer(input);
@@ -68,14 +76,8 @@ public class RpnCalculator implements Calculator {
     }
 
     private void push(String input, int pos) {
-        Statement statement;
         if (!checkInternalOperation(input)) {
-            if (NumberHelper.isNumeric(input)) {
-                statement = new Value(new BigDecimal(input));
-            } else {
-                statement = operatorFactory.get(input, pos, this::operandWrapper);
-            }
-            memory.save(statement);
+            memory.save(operatorFactory.get(input, pos, this::operandWrapper));
         }
     }
 
@@ -119,10 +121,6 @@ public class RpnCalculator implements Calculator {
             return false;
         }
         return true;
-    }
-
-    private void undo() {
-        memory.undo();
     }
 
 }

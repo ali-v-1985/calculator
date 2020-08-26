@@ -11,7 +11,7 @@ public class AdditionTest {
     @Test
     public void testAddTwoNumber() {
 
-        Addition addition = new Addition(new Value(BigDecimal.valueOf(10)), new Value(BigDecimal.valueOf(5)));
+        Addition addition = new Addition(new ValueStatement(BigDecimal.valueOf(10)), new ValueStatement(BigDecimal.valueOf(5)));
 
         BigDecimal returnValue = addition.execute();
 

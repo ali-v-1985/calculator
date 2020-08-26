@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.Order;
 
+import java.math.BigDecimal;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -52,10 +53,15 @@ public class CalculatorApplicationConfigurer {
 
     @Bean
     @Scope("prototype")
+    public ValueStatement value(BigDecimal value) {
+        return new ValueStatement(value);
+    }
+
+    @Bean
+    @Scope("prototype")
     public Addition addition(Function<Class<? extends Statement>, OperandWrapper> operandWrapperFunc) {
         BinaryOperandWrapper operandWrapper = (BinaryOperandWrapper) operandWrapperFunc.apply(Addition.class);
         return (Addition) getBinaryOperator(operandWrapper, Addition::new);
-
     }
 
     @Bean
@@ -63,7 +69,6 @@ public class CalculatorApplicationConfigurer {
     public Subtraction subtraction(Function<Class<? extends Statement>, OperandWrapper> operandWrapperFunc) {
         BinaryOperandWrapper operandWrapper = (BinaryOperandWrapper) operandWrapperFunc.apply(Subtraction.class);
         return (Subtraction) getBinaryOperator(operandWrapper, Subtraction::new);
-
     }
 
     @Bean
@@ -71,7 +76,6 @@ public class CalculatorApplicationConfigurer {
     public Multiplication multiplication(Function<Class<? extends Statement>, OperandWrapper> operandWrapperFunc) {
         BinaryOperandWrapper operandWrapper = (BinaryOperandWrapper) operandWrapperFunc.apply(Multiplication.class);
         return (Multiplication) getBinaryOperator(operandWrapper, Multiplication::new);
-
     }
 
     @Bean
@@ -79,7 +83,6 @@ public class CalculatorApplicationConfigurer {
     public Division division(Function<Class<? extends Statement>, OperandWrapper> operandWrapperFunc) {
         BinaryOperandWrapper operandWrapper = (BinaryOperandWrapper) operandWrapperFunc.apply(Division.class);
         return (Division) getBinaryOperator(operandWrapper, Division::new);
-
     }
 
     @Bean

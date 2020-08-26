@@ -16,4 +16,9 @@ public interface Calculator {
      * Clear the memory of the {@link Calculator}
      */
     void clear();
+
+    /**
+     * Undo the latest operation of memory of the {@link Calculator}
+     */
+    void undo();
 }
