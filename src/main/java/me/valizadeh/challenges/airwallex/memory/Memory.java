@@ -65,7 +65,7 @@ public abstract class Memory {
 
     /**
      * Saves the {@link Statement} on the memory.
-     * @param statement
+     * @param statement the statement which should be saved.
      */
     public void save(Statement statement) {
         this.getOperations().push(statement);
