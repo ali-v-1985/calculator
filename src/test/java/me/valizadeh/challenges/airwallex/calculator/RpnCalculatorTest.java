@@ -2,6 +2,7 @@ package me.valizadeh.challenges.airwallex.calculator;
 
 import me.valizadeh.challenges.airwallex.exception.InsufficientParametersException;
 import me.valizadeh.challenges.airwallex.memory.Memory;
+import me.valizadeh.challenges.airwallex.memory.UndoableMemory;
 import me.valizadeh.challenges.airwallex.operator.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +12,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
+import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.Mockito.*;
 
 

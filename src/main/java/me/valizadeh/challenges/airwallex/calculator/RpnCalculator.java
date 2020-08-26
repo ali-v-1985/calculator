@@ -12,7 +12,7 @@ import me.valizadeh.challenges.airwallex.utils.NumberHelper;
 import java.math.BigDecimal;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
-import java.util.function.*;
+import java.util.function.ObjIntConsumer;
 
 /**
  * The {@literal Reverse Polish Notation} implementation of the {@link Calculator} API.
@@ -111,13 +111,12 @@ public class RpnCalculator implements Calculator {
     }
 
     private boolean checkInternalOperation(String input) {
-        if (!(input.equals(UNDO_COMMAND) || input.equals(CLEAR_COMMAND))) {
-            return false;
-        }
         if (input.equals(UNDO_COMMAND)) {
             this.undo();
-        } else {
+        } else if (input.equals(CLEAR_COMMAND)) {
             this.clear();
+        } else {
+            return false;
         }
         return true;
     }

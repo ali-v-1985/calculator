@@ -6,18 +6,16 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Deque;
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
  * The memory which saves the {@link Statement}s.
  */
-public class Memory {
+public abstract class Memory {
 
     private static final String PATTERN = "#.##########";
 
     private final ThreadLocal<Deque<Statement>> operations;
-    private final ThreadLocal<Deque<Statement>> undone;
     private final DecimalFormat decimalFormat;
 
 
@@ -25,9 +23,6 @@ public class Memory {
         this.operations = new ThreadLocal<>();
         this.operations.remove();
         this.operations.set(new ConcurrentLinkedDeque<>());
-        this.undone = new ThreadLocal<>();
-        this.undone.remove();
-        this.undone.set(new ConcurrentLinkedDeque<>());
         this.decimalFormat = new DecimalFormat(PATTERN);
         this.decimalFormat.setRoundingMode(RoundingMode.FLOOR);
     }
@@ -66,21 +61,6 @@ public class Memory {
         this.operations.get().clear();
         this.operations.remove();
         this.operations.set(new ConcurrentLinkedDeque<>());
-        this.undone.get().clear();
-        this.undone.remove();
-        this.undone.set(new ConcurrentLinkedDeque<>());
-    }
-
-    /**
-     * Undoes the latest pushed {@link Statement} on the memory.
-     */
-    public void undo() {
-        if (!this.getOperations().isEmpty()) {
-            Statement undoStatement = this.getOperations().pop();
-            List<Statement> undoStatements = undoStatement.unExecute();
-            undoStatements.forEach(o -> this.getOperations().push(o));
-            this.getUndone().push(undoStatement);
-        }
     }
 
     /**
@@ -91,11 +71,9 @@ public class Memory {
         this.getOperations().push(statement);
     }
 
-    private Deque<Statement> getUndone() {
-        if(undone.get() == null) {
-            this.undone.remove();
-            undone.set(new ConcurrentLinkedDeque<>());
-        }
-        return undone.get();
-    }
+    /**
+     * Undoes the latest pushed {@link Statement} on the memory.
+     */
+    public abstract void undo();
+
 }

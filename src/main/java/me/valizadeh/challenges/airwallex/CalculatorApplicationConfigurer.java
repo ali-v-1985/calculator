@@ -5,11 +5,13 @@ import me.valizadeh.challenges.airwallex.calculator.RpnCalculator;
 import me.valizadeh.challenges.airwallex.gateway.ConsoleGateway;
 import me.valizadeh.challenges.airwallex.gateway.Gateway;
 import me.valizadeh.challenges.airwallex.memory.Memory;
+import me.valizadeh.challenges.airwallex.memory.UndoableMemory;
 import me.valizadeh.challenges.airwallex.operand.BinaryOperandWrapper;
 import me.valizadeh.challenges.airwallex.operand.OperandWrapper;
 import me.valizadeh.challenges.airwallex.operand.UnaryOperandWrapper;
 import me.valizadeh.challenges.airwallex.operator.*;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
@@ -27,7 +29,7 @@ public class CalculatorApplicationConfigurer {
 
     @Bean
     @Order
-    public Calculator rpn(Memory memory,
+    public Calculator rpn(@Qualifier("undoableMemory") Memory memory,
                           OperatorFactory operatorFactory) {
         return new RpnCalculator(memory, operatorFactory);
     }
@@ -100,8 +102,8 @@ public class CalculatorApplicationConfigurer {
     }
 
     @Bean
-    public Memory memory() {
-        return new Memory();
+    public Memory undoableMemory() {
+        return new UndoableMemory();
     }
 
 
