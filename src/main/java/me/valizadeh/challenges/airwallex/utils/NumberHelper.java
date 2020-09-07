@@ -1,5 +1,6 @@
 package me.valizadeh.challenges.airwallex.utils;
 
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 /**
@@ -10,16 +11,18 @@ public class NumberHelper {
     private NumberHelper() {
     }
 
-    private static final Pattern numericPattern;
+    private static final Predicate<String> numericPatternPredicate;
 
     static {
-        numericPattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+        numericPatternPredicate = Pattern.compile("-?\\d+(\\.\\d+)?").asPredicate();
     }
 
-    public static boolean isNumeric(String strNum) {
-        if (strNum == null) {
-            return false;
-        }
-        return numericPattern.matcher(strNum).matches();
+    public static Predicate<String> isNumeric() {
+        return strNum -> {
+            if (strNum == null) {
+                return false;
+            }
+            return numericPatternPredicate.test(strNum);
+        };
     }
 }

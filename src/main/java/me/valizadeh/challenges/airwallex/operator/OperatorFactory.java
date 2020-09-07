@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static me.valizadeh.challenges.airwallex.utils.Constants.INSUFFICIENT_PARAMETERS_WARN;
 
@@ -23,10 +24,12 @@ public class OperatorFactory {
 
     private final BeanFactory beanFactory;
     private final OperatorSignMapper operatorSignMapper;
+    private final Predicate<String> numericPredicate;
 
     public OperatorFactory(BeanFactory beanFactory, OperatorSignMapper operatorSignMapper) {
         this.beanFactory = beanFactory;
         this.operatorSignMapper = operatorSignMapper;
+        this.numericPredicate = NumberHelper.isNumeric();
     }
 
     /**
@@ -43,7 +46,7 @@ public class OperatorFactory {
     public Statement get(String input, int pos,
                          Function<Class<? extends Statement>, OperandWrapper> operandWrapperFunc) {
         try {
-            if (NumberHelper.isNumeric(input)) {
+            if (numericPredicate.test(input)) {
                 return beanFactory.getBean(ValueStatement.class, new BigDecimal(input));
             }
             return beanFactory.getBean(operatorSignMapper.map(input), operandWrapperFunc);
